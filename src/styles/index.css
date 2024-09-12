@@ -1,12 +1,55 @@
 
-/* 
+ #app{
+    width: 50%;
+    margin-left: 25%;
+}
 
-    You can write your own styles here...
+.container{
+    width: 100%;
+    max-width: 600px;
     
-    
-    ...Or you can use the import command to include 
-    other sylesheets into your bunde as well, e.j:
-    
-    import 'relative/path/to/stylesheet.scss';
+    padding: 0 15px;
+    margin-top: 20px;
+}
 
-*/
+h1{
+    text-align: center;
+    padding-top: 20px;
+    font-size: 70px;
+    
+}
+
+li{
+    text-align: left;
+}
+
+.delete-button{
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+
+ul{
+    list-style: none;
+    text-align: center; 
+}
+
+p{
+    text-align: left;
+    padding-left: 10%;
+    box-shadow: 25px 6px 6px -1px rgba(0, 0, 0, 0.5),
+    25px 2px 4px -1px rgba(0, 0, 0, 0.06);
+    width: 98%;
+}
+
+#footer{
+    box-shadow: 25px 6px 6px -1px rgba(0, 0, 0, 0.5),
+    25px 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+
+.list-group-item {
+    overflow: hidden;
+  }

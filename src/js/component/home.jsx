@@ -1,26 +1,93 @@
-import React from "react";
+import React, { useEffect, useState } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-//include images into your bundle
-import rigoImage from "../../img/rigo-baby.jpg";
+function TodoList() {
+  const [tasks, setTasks] = useState([]);
+  const [newTask, setNewTask] = useState('');
 
-//create your first component
-const Home = () => {
-	return (
-		<div className="text-center">
-			<h1 className="text-center mt-5">Hello Rigo!</h1>
-			<p>
-				<img src={rigoImage} />
-			</p>
-			<a href="#" className="btn btn-success">
-				If you see this green button... bootstrap is working...
-			</a>
-			<p>
-				Made by{" "}
-				<a href="http://www.4geeksacademy.com">4Geeks Academy</a>, with
-				love!
-			</p>
-		</div>
-	);
-};
+  function fetchForTask() {
+    fetch('https://playground.4geeks.com/todo/users/juane')
+      .then((response => response.json()))
+      .then((data) => setTasks(data.todos))
+  }
 
-export default Home;
+  useEffect(() => {
+    fetchForTask();
+  }, []);
+
+  const addTask = () => {
+    if (newTask.trim() !== '') {
+      const taskToAdd = { label: newTask };
+      setNewTask('');
+
+      fetch('https://playground.4geeks.com/todo/todos/juane', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(taskToAdd),
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log('Task added:', data);
+          setTasks([...tasks, taskToAdd]); // Actualiza el estado de tasks
+        })
+    }
+  };
+
+
+  const removeTask = (index) => {
+    const updatedTasks = [];
+    for (let i = 0; i < tasks.length; i++) {
+      if (i !== index) {
+        updatedTasks.push(tasks[i]);
+      }
+    }
+    setTasks(updatedTasks);
+
+    fetch(`https://playground.4geeks.com/todo/todos/${tasks[index].id}`, {
+      method: 'DELETE',
+    })
+      .then((response) => response.text())
+      .then((result) => console.log(result))
+  };
+
+  const handleInputChange = (e) => {
+    setNewTask(e.target.value);
+  };
+
+  const handleKeyUp = (e) => {
+    if (e.key === 'Enter') {
+      addTask();
+    }
+  }
+  return (
+    <>
+      <div className="container">
+        <h1>Todolist with React and Fetch</h1>
+        <input
+          type="text"
+          placeholder="What needs to be done?"
+          className="form-control"
+          value={newTask}
+          onChange={handleInputChange}
+          onKeyUp={handleKeyUp}
+        />
+        <ul className="list-group ">
+          {tasks.map((task, index) => (
+            <li key={index} className="list-group-item d-flex justify-content-between">
+              {task.label}
+              <button className='delete-button' onClick={(onClick) => removeTask(index)}>x</button>
+            </li>
+          ))}
+          <li id='footer' className="list-group-item"></li>
+        </ul>
+      </div>
+      <div className="element">
+        <p>{tasks.length} item(s) left</p>
+      </div>
+    </>
+  );
+}
+
+export default TodoList;
