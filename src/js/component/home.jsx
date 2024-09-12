@@ -28,13 +28,11 @@ function TodoList() {
         body: JSON.stringify(taskToAdd),
       })
         .then(response => response.json())
-        .then(data => {
-          console.log('Task added:', data);
-          setTasks([...tasks, taskToAdd]); // Actualiza el estado de tasks
+        .then(data => {console.log('Task added:', data);
+        fetchForTask(); 
         })
     }
   };
-
 
   const removeTask = (index) => {
     const updatedTasks = [];
@@ -50,11 +48,28 @@ function TodoList() {
     })
       .then((response) => response.text())
       .then((result) => console.log(result))
+      fetchForTask();
   };
 
+  const removeAllTasks = () => {
+    const deletePromises = tasks.map(task => {
+      return fetch(`https://playground.4geeks.com/todo/todos/${task.id}`, {
+        method: 'DELETE',
+      })
+      .then(response => response.text())
+      .then(result => console.log(result))
+    });
+    Promise.all(deletePromises)
+      .then(() => {
+        setTasks([]); 
+        fetchForTask(); 
+      })
+  };
+  
   const handleInputChange = (e) => {
     setNewTask(e.target.value);
   };
+
 
   const handleKeyUp = (e) => {
     if (e.key === 'Enter') {
@@ -85,6 +100,7 @@ function TodoList() {
       </div>
       <div className="element">
         <p>{tasks.length} item(s) left</p>
+        <button className="btn btn-danger" onClick={removeAllTasks}>Remove All Tasks</button>
       </div>
     </>
   );
