@@ -61,7 +61,6 @@ function TodoList() {
     });
     Promise.all(deletePromises)
       .then(() => {
-        setTasks([]); 
         fetchForTask(); 
       })
   };
